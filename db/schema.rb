@@ -13,9 +13,12 @@
 
 ActiveRecord::Schema.define(version: 20140906030139) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "agent_logs", force: true do |t|
     t.integer  "agent_id",                      null: false
-    t.text     "message",                       null: false, charset: "utf8mb4", collation: "utf8mb4_bin"
+    t.text     "message",                       null: false
     t.integer  "level",             default: 3, null: false
     t.integer  "inbound_event_id"
     t.integer  "outbound_event_id"
@@ -25,25 +28,25 @@ ActiveRecord::Schema.define(version: 20140906030139) do
 
   create_table "agents", force: true do |t|
     t.integer  "user_id"
-    t.text     "options",                                                               charset: "utf8mb4", collation: "utf8mb4_bin"
-    t.string   "type",                                                                                      collation: "utf8_bin"
-    t.string   "name",                                                                  charset: "utf8mb4", collation: "utf8mb4_bin"
-    t.string   "schedule",                                                                                  collation: "utf8_bin"
-    t.integer  "events_count",                             default: 0,     null: false
+    t.text     "options"
+    t.string   "type"
+    t.string   "name"
+    t.string   "schedule"
+    t.integer  "events_count",          default: 0,     null: false
     t.datetime "last_check_at"
     t.datetime "last_receive_at"
     t.integer  "last_checked_event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "memory",                limit: 2147483647,                              charset: "utf8mb4", collation: "utf8mb4_bin"
+    t.text     "memory"
     t.datetime "last_web_request_at"
-    t.integer  "keep_events_for",                          default: 0,     null: false
+    t.integer  "keep_events_for",       default: 0,     null: false
     t.datetime "last_event_at"
     t.datetime "last_error_log_at"
-    t.boolean  "propagate_immediately",                    default: false, null: false
-    t.boolean  "disabled",                                 default: false, null: false
+    t.boolean  "propagate_immediately", default: false, null: false
+    t.boolean  "disabled",              default: false, null: false
     t.integer  "service_id"
-    t.string   "guid",                                                     null: false
+    t.string   "guid",                                  null: false
   end
 
   add_index "agents", ["guid"], name: "index_agents_on_guid", using: :btree
@@ -62,10 +65,10 @@ ActiveRecord::Schema.define(version: 20140906030139) do
   add_index "control_links", ["controller_id", "control_target_id"], name: "index_control_links_on_controller_id_and_control_target_id", unique: true, using: :btree
 
   create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",                    default: 0
-    t.integer  "attempts",                    default: 0
-    t.text     "handler",    limit: 16777215,             charset: "utf8mb4", collation: "utf8mb4_bin"
-    t.text     "last_error",                              charset: "utf8mb4", collation: "utf8mb4_bin"
+    t.integer  "priority",   default: 0
+    t.integer  "attempts",   default: 0
+    t.text     "handler"
+    t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
@@ -80,9 +83,9 @@ ActiveRecord::Schema.define(version: 20140906030139) do
   create_table "events", force: true do |t|
     t.integer  "user_id"
     t.integer  "agent_id"
-    t.decimal  "lat",                         precision: 15, scale: 10
-    t.decimal  "lng",                         precision: 15, scale: 10
-    t.text     "payload",    limit: 16777215,                           charset: "utf8mb4", collation: "utf8mb4_bin"
+    t.decimal  "lat",        precision: 15, scale: 10
+    t.decimal  "lng",        precision: 15, scale: 10
+    t.text     "payload"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "expires_at"
@@ -114,13 +117,13 @@ ActiveRecord::Schema.define(version: 20140906030139) do
   add_index "scenario_memberships", ["scenario_id"], name: "index_scenario_memberships_on_scenario_id", using: :btree
 
   create_table "scenarios", force: true do |t|
-    t.string   "name",                         null: false, charset: "utf8mb4", collation: "utf8mb4_bin"
+    t.string   "name",                         null: false
     t.integer  "user_id",                      null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "description",                               charset: "utf8mb4", collation: "utf8mb4_bin"
+    t.text     "description"
     t.boolean  "public",       default: false, null: false
-    t.string   "guid",                         null: false, charset: "ascii",   collation: "ascii_bin"
+    t.string   "guid",                         null: false
     t.string   "source_url"
     t.string   "tag_bg_color"
     t.string   "tag_fg_color"
@@ -153,31 +156,31 @@ ActiveRecord::Schema.define(version: 20140906030139) do
     t.text     "credential_value",                  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "mode",             default: "text", null: false, collation: "utf8_bin"
+    t.string   "mode",             default: "text", null: false
   end
 
   add_index "user_credentials", ["user_id", "credential_name"], name: "index_user_credentials_on_user_id_and_credential_name", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                              default: "",    null: false,                     collation: "utf8_bin"
-    t.string   "encrypted_password",                 default: "",    null: false, charset: "ascii",   collation: "ascii_bin"
-    t.string   "reset_password_token",                                                                collation: "utf8_bin"
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                      default: 0
+    t.integer  "sign_in_count",          default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "admin",                              default: false, null: false
-    t.integer  "failed_attempts",                    default: 0
+    t.boolean  "admin",                  default: false, null: false
+    t.integer  "failed_attempts",        default: 0
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.string   "username",               limit: 191,                 null: false, charset: "utf8mb4", collation: "utf8mb4_unicode_ci"
-    t.string   "invitation_code",                                    null: false,                     collation: "utf8_bin"
-    t.integer  "scenario_count",                     default: 0,     null: false
+    t.string   "username",                               null: false
+    t.string   "invitation_code",                        null: false
+    t.integer  "scenario_count",         default: 0,     null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
